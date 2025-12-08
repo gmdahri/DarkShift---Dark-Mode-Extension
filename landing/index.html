@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dark Mode Extension - Transform any website into dark mode with smart compatibility detection and customizable brightness controls.">
+    <title>Dark Mode Extension - Protect Your Eyes</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                        </svg>
+                    </div>
+                    <span class="logo-text">Dark Mode</span>
+                </div>
+                <div class="nav-links">
+                    <a href="#features">Features</a>
+                    <a href="#how-it-works">How It Works</a>
+                    <a href="#install">Install</a>
+                    <a href="https://github.com" class="btn-secondary" target="_blank">GitHub</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span>✨ New Update</span>
+                </div>
+                <h1 class="hero-title">
+                    Transform Any Website
+                    <span class="gradient-text">Into Dark Mode</span>
+                </h1>
+                <p class="hero-description">
+                    Protect your eyes with intelligent dark mode that works on any website. 
+                    Smart compatibility detection, customizable brightness controls, and a beautiful interface.
+                </p>
+                <div class="hero-actions">
+                    <a href="#install" class="btn-primary">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2v20M2 12h20" />
+                        </svg>
+                        Install Extension
+                    </a>
+                    <a href="#features" class="btn-outline">
+                        Learn More
+                    </a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">Compatible</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">Smart</div>
+                        <div class="stat-label">Detection</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">Custom</div>
+                        <div class="stat-label">Controls</div>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="extension-preview">
+                    <div class="preview-header">
+                        <div class="preview-dots">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                        <div class="preview-url">google.com</div>
+                    </div>
+                    <div class="preview-content">
+                        <div class="preview-popup">
+                            <div class="popup-header">
+                                <div class="popup-icon"></div>
+                                <div>
+                                    <div class="popup-title">Dark Mode</div>
+                                    <div class="popup-subtitle">Protect your eyes</div>
+                                </div>
+                            </div>
+                            <div class="popup-toggle">
+                                <div class="toggle-label">Dark Mode On</div>
+                                <div class="toggle-switch active"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Powerful Features</h2>
+                <p class="section-description">
+                    Everything you need for the perfect dark mode experience
+                </p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Smart Compatibility</h3>
+                    <p class="feature-description">
+                        Automatically detects if a website can be turned dark. 
+                        Disables toggle for incompatible sites with clear explanations.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Custom Controls</h3>
+                    <p class="feature-description">
+                        Adjust brightness, contrast, sepia, and grayscale to your preference. 
+                        Fine-tune the dark mode experience for every website.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Per-Site Preferences</h3>
+                    <p class="feature-description">
+                        Remembers your dark mode preference for each website. 
+                        Enable on some sites, disable on others - your choice.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Lightning Fast</h3>
+                    <p class="feature-description">
+                        Optimized for performance. Dark mode applies instantly without 
+                        slowing down your browsing experience.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Privacy First</h3>
+                    <p class="feature-description">
+                        All preferences stored locally. No data collection, no tracking. 
+                        Your browsing stays private.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Beautiful UI</h3>
+                    <p class="feature-description">
+                        Modern glassmorphism design with gradient accents. 
+                        A pleasure to use every time you open it.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section id="how-it-works" class="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">How It Works</h2>
+                <p class="section-description">
+                    Simple, intelligent, and effective
+                </p>
+            </div>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">01</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Smart Detection</h3>
+                        <p class="step-description">
+                            When you open the extension, it automatically checks if the current website 
+                            can be turned dark. It detects native dark mode, extension pages, iframes, 
+                            and security restrictions.
+                        </p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">02</div>
+                    <div class="step-content">
+                        <h3 class="step-title">One-Click Toggle</h3>
+                        <p class="step-description">
+                            Simply toggle dark mode on or off. The extension applies intelligent CSS 
+                            filters to transform the page while preserving images and media quality.
+                        </p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">03</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Customize & Save</h3>
+                        <p class="step-description">
+                            Adjust brightness, contrast, and other filters to your liking. 
+                            Your preferences are saved per website and persist across sessions.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Installation Section -->
+    <section id="install" class="install">
+        <div class="container">
+            <div class="install-content">
+                <div class="install-text">
+                    <h2 class="section-title">Get Started in Seconds</h2>
+                    <p class="section-description">
+                        Install the extension and start protecting your eyes today
+                    </p>
+                    <div class="install-steps">
+                        <div class="install-step">
+                            <div class="install-step-icon">1</div>
+                            <div>
+                                <h4>Download & Extract</h4>
+                                <p>Download the extension and extract the files</p>
+                            </div>
+                        </div>
+                        <div class="install-step">
+                            <div class="install-step-icon">2</div>
+                            <div>
+                                <h4>Open Chrome Extensions</h4>
+                                <p>Navigate to <code>chrome://extensions/</code></p>
+                            </div>
+                        </div>
+                        <div class="install-step">
+                            <div class="install-step-icon">3</div>
+                            <div>
+                                <h4>Enable Developer Mode</h4>
+                                <p>Toggle "Developer mode" in the top right</p>
+                            </div>
+                        </div>
+                        <div class="install-step">
+                            <div class="install-step-icon">4</div>
+                            <div>
+                                <h4>Load Extension</h4>
+                                <p>Click "Load unpacked" and select the <code>dist</code> folder</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="install-visual">
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-dot"></span>
+                            <span class="code-dot"></span>
+                            <span class="code-dot"></span>
+                            <span class="code-title">Installation</span>
+                        </div>
+                        <div class="code-content">
+                            <div class="code-line">
+                                <span class="code-comment"># Build the extension</span>
+                            </div>
+                            <div class="code-line">
+                                <span class="code-keyword">npm</span> <span class="code-string">install</span>
+                            </div>
+                            <div class="code-line">
+                                <span class="code-keyword">npm</span> <span class="code-string">run build</span>
+                            </div>
+                            <div class="code-line empty"></div>
+                            <div class="code-line">
+                                <span class="code-comment"># Load in Chrome</span>
+                            </div>
+                            <div class="code-line">
+                                <span class="code-comment"># 1. Go to chrome://extensions/</span>
+                            </div>
+                            <div class="code-line">
+                                <span class="code-comment"># 2. Enable Developer mode</span>
+                            </div>
+                            <div class="code-line">
+                                <span class="code-comment"># 3. Click "Load unpacked"</span>
+                            </div>
+                            <div class="code-line">
+                                <span class="code-comment"># 4. Select the dist/ folder</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Frequently Asked Questions</h2>
+            </div>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Does it work on all websites?</h3>
+                        <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes! The extension works on most websites. It automatically detects if a site is compatible and will disable the toggle if dark mode cannot be applied (like on extension pages or sites with native dark mode).</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Will it slow down my browser?</h3>
+                        <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </div>
+                    <div class="faq-answer">
+                        <p>No, the extension is optimized for performance. Dark mode is applied using efficient CSS filters that have minimal impact on page load times or browser performance.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Is my data private?</h3>
+                        <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Absolutely! All your preferences are stored locally in your browser. We don't collect any data, track your browsing, or send information to external servers.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Can I customize the dark mode appearance?</h3>
+                        <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes! Click the settings icon in the extension popup to adjust brightness, contrast, sepia, and grayscale filters. Each website can have its own custom settings.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2 class="cta-title">Ready to Protect Your Eyes?</h2>
+                <p class="cta-description">
+                    Join thousands of users enjoying a better browsing experience
+                </p>
+                <a href="#install" class="btn-primary btn-large">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2v20M2 12h20" />
+                    </svg>
+                    Install Now
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="logo">
+                        <div class="logo-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                            </svg>
+                        </div>
+                        <span class="logo-text">Dark Mode</span>
+                    </div>
+                    <p class="footer-tagline">Protect your eyes, enhance your browsing</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Product</h4>
+                        <a href="#features">Features</a>
+                        <a href="#how-it-works">How It Works</a>
+                        <a href="#install">Installation</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Resources</h4>
+                        <a href="https://github.com" target="_blank">GitHub</a>
+                        <a href="#faq">FAQ</a>
+                        <a href="#">Documentation</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Legal</h4>
+                        <a href="#">Privacy Policy</a>
+                        <a href="#">Terms of Service</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Dark Mode Extension. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+

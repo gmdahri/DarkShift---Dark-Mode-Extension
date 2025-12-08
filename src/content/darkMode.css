@@ -1,0 +1,83 @@
+/* Dark Mode Styles */
+body {
+  background-color: #1a1a1a !important;
+  color: #e0e0e0 !important;
+}
+
+/* Invert backgrounds but preserve images */
+* {
+  background-color: #1a1a1a !important;
+  color: #e0e0e0 !important;
+  border-color: #444 !important;
+}
+
+/* Don't invert images and videos */
+img,
+video,
+svg,
+canvas,
+iframe,
+embed,
+object {
+  filter: none !important;
+  background-color: transparent !important;
+}
+
+/* Preserve image backgrounds */
+[style*="background-image"],
+[style*="backgroundImage"] {
+  filter: invert(1) hue-rotate(180deg) !important;
+}
+
+/* Input fields */
+input,
+textarea,
+select {
+  background-color: #2a2a2a !important;
+  color: #e0e0e0 !important;
+  border-color: #555 !important;
+}
+
+/* Links */
+a {
+  color: #6bb6ff !important;
+}
+
+a:visited {
+  color: #b794f6 !important;
+}
+
+/* Buttons */
+button {
+  background-color: #2a2a2a !important;
+  color: #e0e0e0 !important;
+  border-color: #555 !important;
+}
+
+/* Scrollbars */
+::-webkit-scrollbar {
+  background-color: #1a1a1a !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #444 !important;
+}
+
+/* Code blocks */
+code,
+pre {
+  background-color: #2a2a2a !important;
+  color: #e0e0e0 !important;
+}
+
+/* Tables */
+table {
+  border-color: #444 !important;
+}
+
+th,
+td {
+  border-color: #444 !important;
+  background-color: #1a1a1a !important;
+}
+
