@@ -2,10 +2,13 @@
 
 > Transform any website into dark mode instantly. Reduce eye strain, save battery, and browse comfortably with a beautiful, customizable dark mode experience.
 
+🌐 **[Visit Landing Page](https://gmdahri.github.io/DarkShift---Dark-Mode-Extension/)** | 📖 **[Documentation](https://github.com/gmdahri/DarkShift---Dark-Mode-Extension#readme)** | 🐛 **[Report Issues](https://github.com/gmdahri/DarkShift---Dark-Mode-Extension/issues)**
+
 [![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-4285F4?logo=google-chrome&logoColor=white)](https://chrome.google.com/webstore)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.2-blue?logo=typescript)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-18.2-61DAFB?logo=react)](https://react.dev/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Landing Page](https://img.shields.io/badge/Landing-Page-22d3ee)](https://gmdahri.github.io/DarkShift---Dark-Mode-Extension/)
 
 ## ✨ Features
 

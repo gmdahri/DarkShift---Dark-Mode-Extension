@@ -10,7 +10,8 @@
     "build:content": "npx esbuild src/content/content.ts --bundle --outfile=dist/content.js --format=iife",
     "build:background": "npx esbuild src/background/background.ts --bundle --outfile=dist/background.js --format=iife",
     "copy-files": "node scripts/copy-files.js",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "sync-landing": "bash scripts/sync-landing-page.sh"
   },
   "dependencies": {
     "react": "^18.2.0",
