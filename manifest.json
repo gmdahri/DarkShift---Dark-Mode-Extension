@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "DarkShift - Dark Mode",
   "version": "1.0.0",
-  "description": "Transform any website into dark mode instantly. Reduce eye strain, save battery, and browse comfortably at night with customizable darkness settings.",
+  "description": "Transform any website into beautiful dark mode. Smart filters, per-site preferences, custom presets & fine-tune controls. Reduce eye strain instantly.",
   "permissions": [
     "activeTab",
     "storage",
