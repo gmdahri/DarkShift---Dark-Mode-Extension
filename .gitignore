@@ -24,3 +24,11 @@ npm-debug.log*
 # Environment
 .env
 .env.local
+
+# Marketing and social media content
+LINKEDIN_POST.md
+SOCIAL_MEDIA_POSTS.md
+TWITTER_POSTS.md
+MARKETING_CONTENT.md
+*_POST*.md
+*_SOCIAL*.md
