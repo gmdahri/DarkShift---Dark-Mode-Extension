@@ -11,7 +11,10 @@
     "build:background": "npx esbuild src/background/background.ts --bundle --outfile=dist/background.js --format=iife",
     "copy-files": "node scripts/copy-files.js",
     "preview": "vite preview",
-    "sync-landing": "bash scripts/sync-landing-page.sh"
+    "sync-landing": "bash scripts/sync-landing-page.sh",
+    "landing": "npx serve landing -p 3000",
+    "landing:docs": "npx serve docs -p 3000",
+    "prepare-webstore": "bash scripts/prepare-webstore-package.sh"
   },
   "dependencies": {
     "react": "^18.2.0",
