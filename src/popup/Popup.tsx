@@ -1,7 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useDarkMode } from './hooks/useDarkMode';
 import { useSiteCompatibility } from './hooks/useSiteCompatibility';
 import { useSettings } from './hooks/useSettings';
+import { useOnboarding } from './hooks/useOnboarding';
+import { useToast } from './hooks/useToast';
 import { ToggleSwitch } from './components/ToggleSwitch';
 import { StatusIndicator } from './components/StatusIndicator';
 import { SiteCard } from './components/SiteCard';
@@ -10,23 +12,41 @@ import { SettingsPanel } from './components/SettingsPanel';
 import { SiteListManager } from './components/SiteListManager';
 import { PresetManager } from './components/PresetManager';
 import { Background } from './components/Background';
+import { Onboarding } from './components/Onboarding';
+import { ToastContainer } from './components/Toast';
+import { ScheduleSettings } from './components/ScheduleSettings';
+import { AdvancedSettings } from './components/AdvancedSettings';
 
 export function Popup() {
   const { enabled, domain, loading, applying, toggleDarkMode } = useDarkMode();
   const { compatibility, state, loading: compatibilityLoading, refresh } = useSiteCompatibility();
   const { settings, updateSettings, resetSettings, domain: settingsDomain } = useSettings();
+  const { showOnboarding, completeOnboarding } = useOnboarding();
+  const { toasts, dismissToast, showUndo } = useToast();
+
   const [showSettings, setShowSettings] = useState(false);
   const [showSiteList, setShowSiteList] = useState(false);
   const [showPresets, setShowPresets] = useState(false);
+  const [showSchedule, setShowSchedule] = useState(false);
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
-  const handleToggle = async (value: boolean) => {
+  const handleToggle = useCallback(async (value: boolean) => {
     try {
       await toggleDarkMode(value);
       setTimeout(() => refresh(), 100);
+
+      // Show undo toast
+      showUndo(
+        value ? 'Dark mode enabled' : 'Dark mode disabled',
+        async () => {
+          await toggleDarkMode(!value);
+          setTimeout(() => refresh(), 100);
+        }
+      );
     } catch (error) {
       console.error('Toggle failed:', error);
     }
-  };
+  }, [enabled, toggleDarkMode, refresh, showUndo]);
 
   const isDisabled = compatibility?.disableToggle ?? false;
 
@@ -40,7 +60,7 @@ export function Popup() {
   return (
     <div className="relative w-[360px] min-h-[480px] overflow-hidden">
       <Background />
-      
+
       <div className="relative z-10 p-6">
         {/* Header */}
         <div className="flex items-center justify-between mb-8 animate-fade-up">
@@ -50,26 +70,26 @@ export function Popup() {
               <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-rose-500 via-orange-400 to-amber-400 
                 flex items-center justify-center shadow-lg animate-pulse-glow">
                 <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" 
+                  <path strokeLinecap="round" strokeLinejoin="round"
                     d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
                 </svg>
               </div>
               {/* Decorative ring */}
               <div className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-rose-500/20 to-amber-400/20 -z-10 blur-sm" />
             </div>
-            
+
             <div>
-              <h1 className="text-xl font-bold gradient-text tracking-tight">DarkShift</h1>
+              <h1 className="text-xl font-bold gradient-text tracking-tight">Dark Mode Pro</h1>
               <p className="text-xs text-white/40 font-medium mt-0.5">Dark Mode Extension</p>
             </div>
           </div>
-          
+
         </div>
 
         <div className="space-y-4">
           {/* Site Card */}
-          <SiteCard 
-            domain={domain} 
+          <SiteCard
+            domain={domain}
             compatibility={compatibility}
             loading={compatibilityLoading}
           />
@@ -79,8 +99,8 @@ export function Popup() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-500
-                  ${enabled 
-                    ? 'bg-gradient-to-br from-rose-500/20 to-amber-500/20 border border-rose-500/30' 
+                  ${enabled
+                    ? 'bg-gradient-to-br from-rose-500/20 to-amber-500/20 border border-rose-500/30'
                     : 'bg-white/5 border border-white/10'}`}>
                   {enabled ? (
                     <svg className="w-6 h-6 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
@@ -125,12 +145,12 @@ export function Popup() {
               >
                 <div className="flex items-center gap-3">
                   <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300
-                    ${showSettings 
-                      ? 'bg-gradient-to-br from-rose-500/20 to-amber-500/20 border border-rose-500/30' 
+                    ${showSettings
+                      ? 'bg-gradient-to-br from-rose-500/20 to-amber-500/20 border border-rose-500/30'
                       : 'bg-white/5 border border-white/10 group-hover:bg-white/10'}`}>
-                    <svg className={`w-4 h-4 transition-transform duration-300 ${showSettings ? 'rotate-90 text-rose-400' : 'text-white/40 group-hover:text-white'}`} 
+                    <svg className={`w-4 h-4 transition-transform duration-300 ${showSettings ? 'rotate-90 text-rose-400' : 'text-white/40 group-hover:text-white'}`}
                       fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" 
+                      <path strokeLinecap="round" strokeLinejoin="round"
                         d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
                     </svg>
                   </div>
@@ -144,7 +164,7 @@ export function Popup() {
                     </p>
                   </div>
                 </div>
-                <svg className={`w-4 h-4 transition-transform duration-300 ${showSettings ? 'rotate-180 text-white' : 'text-white/30 group-hover:text-white/50'}`} 
+                <svg className={`w-4 h-4 transition-transform duration-300 ${showSettings ? 'rotate-180 text-white' : 'text-white/30 group-hover:text-white/50'}`}
                   fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
@@ -159,13 +179,13 @@ export function Popup() {
                 <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-rose-500/20 to-amber-500/20 
                   flex items-center justify-center">
                   <svg className="w-4 h-4 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                       d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
                   </svg>
                 </div>
                 <span className="text-sm font-semibold text-white">Fine-tune</span>
               </div>
-              <SettingsPanel 
+              <SettingsPanel
                 settings={settings}
                 onUpdate={updateSettings}
                 onReset={resetSettings}
@@ -174,7 +194,7 @@ export function Popup() {
           )}
 
           {/* Compatibility Error */}
-          <CompatibilityChecker 
+          <CompatibilityChecker
             compatibility={compatibility}
             loading={compatibilityLoading}
           />
@@ -190,7 +210,7 @@ export function Popup() {
                   flex items-center justify-center border border-violet-500/20
                   group-hover:border-violet-500/40 transition-colors">
                   <svg className="w-5 h-5 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                       d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
                   </svg>
                 </div>
@@ -198,7 +218,7 @@ export function Popup() {
                   <p className="text-sm font-semibold text-white group-hover:text-violet-300 transition-colors">
                     Presets
                   </p>
-                  <p className="text-[11px] text-white/40 mt-0.5">Themes & styles</p>
+                  <p className="text-[11px] text-white/40 mt-0.5">12 themes</p>
                 </div>
               </div>
             </button>
@@ -212,7 +232,7 @@ export function Popup() {
                   flex items-center justify-center border border-cyan-500/20
                   group-hover:border-cyan-500/40 transition-colors">
                   <svg className="w-5 h-5 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                       d="M4 6h16M4 10h16M4 14h16M4 18h16" />
                   </svg>
                 </div>
@@ -224,6 +244,51 @@ export function Popup() {
                 </div>
               </div>
             </button>
+
+            <button
+              onClick={() => setShowSchedule(true)}
+              className="group rounded-2xl glass p-4 card-hover text-left"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 
+                  flex items-center justify-center border border-amber-500/20
+                  group-hover:border-amber-500/40 transition-colors">
+                  <svg className="w-5 h-5 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-white group-hover:text-amber-300 transition-colors">
+                    Schedule
+                  </p>
+                  <p className="text-[11px] text-white/40 mt-0.5">Auto & system</p>
+                </div>
+              </div>
+            </button>
+
+            <button
+              onClick={() => setShowAdvanced(true)}
+              className="group rounded-2xl glass p-4 card-hover text-left"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500/20 to-teal-500/20 
+                  flex items-center justify-center border border-emerald-500/20
+                  group-hover:border-emerald-500/40 transition-colors">
+                  <svg className="w-5 h-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                      d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-white group-hover:text-emerald-300 transition-colors">
+                    Advanced
+                  </p>
+                  <p className="text-[11px] text-white/40 mt-0.5">More options</p>
+                </div>
+              </div>
+            </button>
           </div>
         </div>
 
@@ -231,19 +296,37 @@ export function Popup() {
         <div className="mt-6 pt-4 border-t border-white/5 animate-fade-up">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-[10px] text-white/30 font-medium">DarkShift</p>
-              <p className="text-[9px] text-white/20 mt-0.5">Dark Mode Extension v1.0.0</p>
+              <p className="text-[10px] text-white/30 font-medium">Dark Mode Pro</p>
+              <p className="text-[9px] text-white/20 mt-0.5">Dark Mode Extension v1.1.0</p>
             </div>
-            <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-white/5">
-              <kbd className="text-[9px] text-white/40 font-mono">⌘</kbd>
-              <span className="text-[9px] text-white/30">+</span>
-              <kbd className="text-[9px] text-white/40 font-mono">⇧</kbd>
-              <span className="text-[9px] text-white/30">+</span>
-              <kbd className="text-[9px] text-white/40 font-mono">D</kbd>
+            <div className="flex items-center gap-2">
+              <a
+                href="https://gmdahri.github.io/DarkShift---Dark-Mode-Extension/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-gradient-to-r from-rose-500/10 to-amber-500/10 
+                  border border-rose-500/20 hover:border-rose-500/40 transition-all duration-300 group"
+                title="Visit our website"
+              >
+                <svg className="w-3.5 h-3.5 text-rose-400 group-hover:text-rose-300 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                </svg>
+                <span className="text-[10px] text-white/50 group-hover:text-white/70 font-medium transition-colors">Website</span>
+              </a>
+              <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-white/5">
+                <kbd className="text-[9px] text-white/40 font-mono">⌘</kbd>
+                <span className="text-[9px] text-white/30">+</span>
+                <kbd className="text-[9px] text-white/40 font-mono">⇧</kbd>
+                <span className="text-[9px] text-white/30">+</span>
+                <kbd className="text-[9px] text-white/40 font-mono">D</kbd>
+              </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Toast Container */}
+      <ToastContainer toasts={toasts} onDismiss={dismissToast} />
 
       {/* Overlays */}
       {showSiteList && (
@@ -252,6 +335,19 @@ export function Popup() {
 
       {showPresets && settingsDomain && (
         <PresetManager domain={settingsDomain} onClose={() => setShowPresets(false)} />
+      )}
+
+      {showSchedule && (
+        <ScheduleSettings onClose={() => setShowSchedule(false)} />
+      )}
+
+      {showAdvanced && (
+        <AdvancedSettings onClose={() => setShowAdvanced(false)} />
+      )}
+
+      {/* Onboarding */}
+      {showOnboarding && (
+        <Onboarding onComplete={completeOnboarding} />
       )}
     </div>
   );

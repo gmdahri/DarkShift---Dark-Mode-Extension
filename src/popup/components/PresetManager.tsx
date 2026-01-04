@@ -23,13 +23,13 @@ export function PresetManager({ domain, onClose }: PresetManagerProps) {
 
   const handleCreate = async () => {
     if (!presetName.trim()) return;
-    
+
     await create({
       name: presetName.trim(),
       description: presetDesc.trim() || undefined,
       settings: { ...settings },
     });
-    
+
     setPresetName('');
     setPresetDesc('');
     setShowCreateForm(false);
@@ -85,7 +85,13 @@ export function PresetManager({ domain, onClose }: PresetManagerProps) {
     }
   };
 
-  const getPresetGradient = (index: number) => {
+  const getPresetStyle = (preset: Preset, index: number) => {
+    if (preset.color) {
+      return {
+        background: `linear-gradient(135deg, ${preset.color}20 0%, ${preset.color}10 100%)`,
+        borderColor: `${preset.color}30`,
+      };
+    }
     const gradients = [
       'from-rose-500/20 to-orange-500/20 border-rose-500/20',
       'from-violet-500/20 to-purple-500/20 border-violet-500/20',
@@ -94,7 +100,7 @@ export function PresetManager({ domain, onClose }: PresetManagerProps) {
       'from-emerald-500/20 to-teal-500/20 border-emerald-500/20',
       'from-pink-500/20 to-rose-500/20 border-pink-500/20',
     ];
-    return gradients[index % gradients.length];
+    return { className: `bg-gradient-to-br ${gradients[index % gradients.length]}` };
   };
 
   return (
@@ -256,7 +262,7 @@ export function PresetManager({ domain, onClose }: PresetManagerProps) {
           <div className="text-center py-12">
             <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-white/5 flex items-center justify-center">
               <svg className="w-8 h-8 text-white/20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} 
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
                   d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
               </svg>
             </div>
@@ -264,69 +270,60 @@ export function PresetManager({ domain, onClose }: PresetManagerProps) {
             <p className="text-white/20 text-sm mt-1">Create your first preset</p>
           </div>
         ) : (
-          <div className="space-y-3">
-            {presets.map((preset, index) => (
-              <div
-                key={preset.id}
-                className={`group p-4 rounded-xl bg-gradient-to-br ${getPresetGradient(index)} 
-                  border transition-all duration-300 hover:scale-[1.02] animate-fade-up`}
-                style={{ animationDelay: `${index * 0.05}s` }}
-              >
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex-1">
-                    <h3 className="text-sm font-semibold text-white">{preset.name}</h3>
-                    {preset.description && (
-                      <p className="text-xs text-white/50 mt-1">{preset.description}</p>
-                    )}
-                  </div>
-                  {preset.id.startsWith('preset-') && (
-                    <button
-                      onClick={() => remove(preset.id)}
-                      className="p-1.5 text-white/30 hover:text-rose-400 hover:bg-rose-500/10 
-                        rounded-lg transition-all opacity-0 group-hover:opacity-100"
-                      aria-label="Delete"
-                    >
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
-                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                      </svg>
-                    </button>
-                  )}
-                </div>
-                
-                {/* Settings preview */}
-                <div className="flex gap-3 mb-3 text-[10px] font-mono text-white/40">
-                  <span className="flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400/50" />
-                    B:{preset.settings.brightness}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-blue-400/50" />
-                    C:{preset.settings.contrast}
-                  </span>
-                  {preset.settings.sepia > 0 && (
-                    <span className="flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-orange-400/50" />
-                      S:{preset.settings.sepia}
-                    </span>
-                  )}
-                  {preset.settings.grayscale > 0 && (
-                    <span className="flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-gray-400/50" />
-                      G:{preset.settings.grayscale}
-                    </span>
-                  )}
-                </div>
-                
+          <div className="grid grid-cols-3 gap-2">
+            {presets.map((preset, index) => {
+              const style = getPresetStyle(preset, index);
+              return (
                 <button
+                  key={preset.id}
                   onClick={() => handleApply(preset)}
-                  className="w-full py-2 px-4 rounded-lg bg-white/10 hover:bg-white/20 
-                    text-white text-sm font-medium transition-all"
+                  className="group relative p-3 rounded-xl border transition-all duration-300 
+                    hover:scale-[1.03] hover:shadow-lg animate-fade-up text-center"
+                  style={{
+                    ...('background' in style ? style : {}),
+                    animationDelay: `${index * 0.02}s`,
+                  }}
                 >
-                  Apply Preset
+                  {/* Delete button for custom presets */}
+                  {preset.id.startsWith('preset-') && (
+                    <div
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        remove(preset.id);
+                      }}
+                      className="absolute top-1 right-1 p-1 text-white/30 hover:text-rose-400 
+                        hover:bg-rose-500/10 rounded-lg transition-all opacity-0 group-hover:opacity-100 cursor-pointer"
+                    >
+                      <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </div>
+                  )}
+
+                  {/* Color preview circle */}
+                  <div
+                    className="w-12 h-12 mx-auto rounded-full mb-2 flex items-center justify-center
+                      bg-gradient-to-br from-white/10 to-white/5 border border-white/10
+                      group-hover:border-white/20 transition-all"
+                    style={preset.color ? {
+                      background: `linear-gradient(135deg, ${preset.color}40, ${preset.color}20)`,
+                      borderColor: `${preset.color}50`
+                    } : {}}
+                  >
+                    <span className="text-xl">{preset.icon || '🎨'}</span>
+                  </div>
+
+                  {/* Name */}
+                  <h3 className="text-xs font-semibold text-white truncate">{preset.name}</h3>
+
+                  {/* Settings mini preview */}
+                  <div className="flex justify-center gap-1 mt-1.5 text-[8px] font-mono text-white/30">
+                    <span>B:{preset.settings.brightness}</span>
+                    <span>C:{preset.settings.contrast}</span>
+                  </div>
                 </button>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

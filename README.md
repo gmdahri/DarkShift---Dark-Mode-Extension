@@ -1,6 +1,6 @@
-# 🌙 DarkShift - Dark Mode Extension
+# 🌙 Dark Mode Pro
 
-> Transform any website into dark mode instantly. Reduce eye strain, save battery, and browse comfortably with a beautiful, customizable dark mode experience.
+> Dark mode for any website. Smart filters, custom themes, per-site settings, scheduled dark mode. Reduce eye strain instantly.
 
 🌐 **[Visit Landing Page](https://gmdahri.github.io/DarkShift---Dark-Mode-Extension/)** | 📖 **[Documentation](https://github.com/gmdahri/DarkShift---Dark-Mode-Extension#readme)** | 🐛 **[Report Issues](https://github.com/gmdahri/DarkShift---Dark-Mode-Extension/issues)**
 
@@ -12,17 +12,28 @@
 
 ## ✨ Features
 
+### Core Features
 - 🌙 **Smart Dark Mode**: Instantly converts any webpage to dark mode with intelligent CSS filtering
 - ✅ **Compatibility Detection**: Automatically detects and handles sites with native dark mode, iframes, and CSP restrictions
 - 🎨 **Beautiful UI**: Modern glassmorphism design with smooth animations and gradient effects
-- ⚙️ **Fine-tune Settings**: Adjust brightness, contrast, warmth (sepia), and grayscale to your preference
+- ⚙️ **Fine-tune Settings**: Adjust brightness, contrast, saturation, warmth (sepia), and grayscale to your preference
 - 💾 **Per-Site Preferences**: Remembers your dark mode preference for each website individually
 - 📋 **Site Lists**: Whitelist or blacklist specific domains for automatic control
-- 🎭 **Presets**: Save and apply custom theme configurations across different sites
+- 🎭 **12 Preset Themes**: OLED Black, Nord, Solarized, Dracula, Monochrome, and more
 - 🚫 **Auto-Disable**: Intelligently disables toggle for incompatible sites with clear messaging
 - ⚡ **Fast & Lightweight**: Optimized for performance with minimal resource usage
 - ⌨️ **Keyboard Shortcuts**: Quick toggle with `Cmd/Ctrl + Shift + D`
 - 🔄 **SPA Support**: Works seamlessly with single-page applications and dynamic content
+
+### New in v1.1.0
+- ⏰ **Scheduled Dark Mode**: Auto-enable based on time of day with custom start/end times
+- 🖥️ **Follow System Theme**: Automatically sync with your OS dark/light mode preference
+- 🔵 **Icon Badge Status**: See at a glance if dark mode is active via the extension icon
+- 🖱️ **Context Menu Toggle**: Right-click anywhere to toggle dark mode
+- 🎨 **Saturation Control**: Adjust color vibrancy alongside other settings
+- 🎯 **Floating Toggle Button**: Optional on-page button for quick access
+- 🎓 **Onboarding Tutorial**: Guided walkthrough for first-time users
+- ↩️ **Undo Action**: Toast notifications with undo option after toggling
 
 ## 📦 Installation
 

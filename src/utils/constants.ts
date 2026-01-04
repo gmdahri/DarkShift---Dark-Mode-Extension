@@ -6,6 +6,11 @@ export const STORAGE_KEYS = {
   WHITELIST: 'whitelist',
   BLACKLIST: 'blacklist',
   PRESETS: 'presets',
+  SCHEDULE_SETTINGS: 'scheduleSettings',
+  FOLLOW_SYSTEM_THEME: 'followSystemTheme',
+  SHOW_FLOATING_BUTTON: 'showFloatingButton',
+  ONBOARDING_COMPLETED: 'onboardingCompleted',
+  LAST_ACTION: 'lastAction',
 } as const;
 
 export const MESSAGE_TYPES = {
@@ -16,6 +21,30 @@ export const MESSAGE_TYPES = {
   UPDATE_SETTINGS: 'UPDATE_SETTINGS',
   GET_SETTINGS: 'GET_SETTINGS',
   TOGGLE_QUICK: 'TOGGLE_QUICK',
+  SHOW_FAB: 'SHOW_FAB',
+  HIDE_FAB: 'HIDE_FAB',
+  UNDO_ACTION: 'UNDO_ACTION',
 } as const;
 
 export const INCOMPATIBLE_PROTOCOLS = ['chrome-extension:', 'chrome:', 'moz-extension:', 'file:', 'about:'];
+
+export interface ScheduleSettings {
+  enabled: boolean;
+  mode: 'custom' | 'sunset'; // 'sunset' uses automatic sunrise/sunset
+  startTime: string; // HH:MM format
+  endTime: string;   // HH:MM format
+}
+
+export const DEFAULT_SCHEDULE: ScheduleSettings = {
+  enabled: false,
+  mode: 'custom',
+  startTime: '20:00',
+  endTime: '07:00',
+};
+
+export interface LastAction {
+  type: 'toggle' | 'settings' | 'whitelist' | 'blacklist';
+  domain: string;
+  previousValue: unknown;
+  timestamp: number;
+}
