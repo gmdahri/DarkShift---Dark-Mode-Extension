@@ -11,6 +11,10 @@ export const STORAGE_KEYS = {
   SHOW_FLOATING_BUTTON: 'showFloatingButton',
   ONBOARDING_COMPLETED: 'onboardingCompleted',
   LAST_ACTION: 'lastAction',
+  // New feature keys
+  EXCLUDE_IMAGES: 'excludeImages',
+  EXCLUDE_VIDEOS: 'excludeVideos',
+  READING_MODE_ENABLED: 'readingModeEnabled',
 } as const;
 
 export const MESSAGE_TYPES = {
@@ -24,6 +28,9 @@ export const MESSAGE_TYPES = {
   SHOW_FAB: 'SHOW_FAB',
   HIDE_FAB: 'HIDE_FAB',
   UNDO_ACTION: 'UNDO_ACTION',
+  // Reading mode
+  TOGGLE_READING_MODE: 'TOGGLE_READING_MODE',
+  GET_READING_MODE_STATE: 'GET_READING_MODE_STATE',
 } as const;
 
 export const INCOMPATIBLE_PROTOCOLS = ['chrome-extension:', 'chrome:', 'moz-extension:', 'file:', 'about:'];

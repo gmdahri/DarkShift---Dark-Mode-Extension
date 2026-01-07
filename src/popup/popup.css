@@ -331,3 +331,12 @@ input:focus-visible {
   visibility: visible;
   transform: translateX(-50%) translateY(-4px);
 }
+
+@keyframes subtle-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.8; }
+}
+
+.animate-subtle-pulse {
+  animation: subtle-pulse 2s ease-in-out infinite;
+}

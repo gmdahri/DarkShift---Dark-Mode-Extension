@@ -23,7 +23,7 @@ chrome.runtime.onInstalled.addListener(async (details) => {
 
   // Show onboarding for new installs
   if (details.reason === 'install') {
-    await chrome.storage.local.set({ [STORAGE_KEYS.ONBOARDING_COMPLETED]: false });
+    await chrome.storage.sync.set({ [STORAGE_KEYS.ONBOARDING_COMPLETED]: false });
   }
 });
 
@@ -103,9 +103,9 @@ chrome.commands.onCommand.addListener(async (command) => {
       }
     } else if (command === 'toggle-global') {
       // Toggle global setting
-      const result = await chrome.storage.local.get([STORAGE_KEYS.GLOBAL_ENABLED]);
+      const result = await chrome.storage.sync.get([STORAGE_KEYS.GLOBAL_ENABLED]);
       const current = result[STORAGE_KEYS.GLOBAL_ENABLED] ?? false;
-      await chrome.storage.local.set({ [STORAGE_KEYS.GLOBAL_ENABLED]: !current });
+      await chrome.storage.sync.set({ [STORAGE_KEYS.GLOBAL_ENABLED]: !current });
 
       // Apply to current tab
       const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -117,6 +117,14 @@ chrome.commands.onCommand.addListener(async (command) => {
 
         // Update badge
         await updateBadge(!current);
+      }
+    } else if (command === 'toggle-reading-mode') {
+      // Toggle reading mode on current tab
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      if (tab?.id) {
+        await chrome.tabs.sendMessage(tab.id, {
+          type: MESSAGE_TYPES.TOGGLE_READING_MODE,
+        });
       }
     }
   } catch (error) {

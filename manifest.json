@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Dark Mode Pro",
+  "name": "Dark Mode Pro - Night Mode for Websites",
   "version": "1.1.1",
-  "description": "Dark mode for any website. Smart filters, custom themes, per-site settings, scheduled dark mode. Reduce eye strain instantly.",
+  "description": "Dark mode & night mode for any website. 12 themes, scheduled mode, per-site settings, system sync. Reduce eye strain & save battery.",
   "permissions": [
     "activeTab",
     "storage",
@@ -54,6 +54,13 @@
         "mac": "Command+Shift+K"
       },
       "description": "Toggle global dark mode"
+    },
+    "toggle-reading-mode": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+R",
+        "mac": "Command+Shift+R"
+      },
+      "description": "Toggle reading mode"
     }
   }
 }

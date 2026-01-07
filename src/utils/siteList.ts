@@ -7,12 +7,12 @@ export interface SiteListEntry {
 }
 
 export async function getWhitelist(): Promise<SiteListEntry[]> {
-  const result = await chrome.storage.local.get([STORAGE_KEYS.WHITELIST]);
+  const result = await chrome.storage.sync.get([STORAGE_KEYS.WHITELIST]);
   return result[STORAGE_KEYS.WHITELIST] || [];
 }
 
 export async function getBlacklist(): Promise<SiteListEntry[]> {
-  const result = await chrome.storage.local.get([STORAGE_KEYS.BLACKLIST]);
+  const result = await chrome.storage.sync.get([STORAGE_KEYS.BLACKLIST]);
   return result[STORAGE_KEYS.BLACKLIST] || [];
 }
 
@@ -24,14 +24,14 @@ export async function addToWhitelist(domain: string, note?: string): Promise<voi
       addedAt: Date.now(),
       note,
     });
-    await chrome.storage.local.set({ [STORAGE_KEYS.WHITELIST]: whitelist });
+    await chrome.storage.sync.set({ [STORAGE_KEYS.WHITELIST]: whitelist });
   }
 }
 
 export async function removeFromWhitelist(domain: string): Promise<void> {
   const whitelist = await getWhitelist();
   const filtered = whitelist.filter(entry => entry.domain !== domain);
-  await chrome.storage.local.set({ [STORAGE_KEYS.WHITELIST]: filtered });
+  await chrome.storage.sync.set({ [STORAGE_KEYS.WHITELIST]: filtered });
 }
 
 export async function addToBlacklist(domain: string, note?: string): Promise<void> {
@@ -42,14 +42,14 @@ export async function addToBlacklist(domain: string, note?: string): Promise<voi
       addedAt: Date.now(),
       note,
     });
-    await chrome.storage.local.set({ [STORAGE_KEYS.BLACKLIST]: blacklist });
+    await chrome.storage.sync.set({ [STORAGE_KEYS.BLACKLIST]: blacklist });
   }
 }
 
 export async function removeFromBlacklist(domain: string): Promise<void> {
   const blacklist = await getBlacklist();
   const filtered = blacklist.filter(entry => entry.domain !== domain);
-  await chrome.storage.local.set({ [STORAGE_KEYS.BLACKLIST]: filtered });
+  await chrome.storage.sync.set({ [STORAGE_KEYS.BLACKLIST]: filtered });
 }
 
 export async function isWhitelisted(domain: string): Promise<boolean> {
@@ -63,10 +63,10 @@ export async function isBlacklisted(domain: string): Promise<boolean> {
 }
 
 export async function clearWhitelist(): Promise<void> {
-  await chrome.storage.local.set({ [STORAGE_KEYS.WHITELIST]: [] });
+  await chrome.storage.sync.set({ [STORAGE_KEYS.WHITELIST]: [] });
 }
 
 export async function clearBlacklist(): Promise<void> {
-  await chrome.storage.local.set({ [STORAGE_KEYS.BLACKLIST]: [] });
+  await chrome.storage.sync.set({ [STORAGE_KEYS.BLACKLIST]: [] });
 }
 

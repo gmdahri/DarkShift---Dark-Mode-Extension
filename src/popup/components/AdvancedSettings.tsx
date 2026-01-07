@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getShowFloatingButton, setShowFloatingButton } from '../../utils/schedule';
+import { STORAGE_KEYS } from '../../utils/constants';
 
 interface AdvancedSettingsProps {
   onClose: () => void;
@@ -7,6 +8,8 @@ interface AdvancedSettingsProps {
 
 export function AdvancedSettings({ onClose }: AdvancedSettingsProps) {
   const [showFab, setShowFab] = useState(false);
+  const [excludeImages, setExcludeImages] = useState(true);
+  const [excludeVideos, setExcludeVideos] = useState(true);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -17,6 +20,14 @@ export function AdvancedSettings({ onClose }: AdvancedSettingsProps) {
     try {
       const fabEnabled = await getShowFloatingButton();
       setShowFab(fabEnabled);
+
+      // Load exclusion settings
+      const result = await chrome.storage.sync.get([
+        STORAGE_KEYS.EXCLUDE_IMAGES,
+        STORAGE_KEYS.EXCLUDE_VIDEOS,
+      ]);
+      setExcludeImages(result[STORAGE_KEYS.EXCLUDE_IMAGES] ?? true);
+      setExcludeVideos(result[STORAGE_KEYS.EXCLUDE_VIDEOS] ?? true);
     } finally {
       setLoading(false);
     }
@@ -39,6 +50,42 @@ export function AdvancedSettings({ onClose }: AdvancedSettingsProps) {
     }
   };
 
+  const handleExcludeImagesChange = async (enabled: boolean) => {
+    setExcludeImages(enabled);
+    await chrome.storage.sync.set({ [STORAGE_KEYS.EXCLUDE_IMAGES]: enabled });
+
+    // Reload dark mode on current tab to apply changes
+    try {
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      if (tab?.id) {
+        await chrome.tabs.sendMessage(tab.id, {
+          type: 'UPDATE_SETTINGS',
+          payload: { excludeImages: enabled },
+        });
+      }
+    } catch (error) {
+      console.error('Failed to update exclude images setting:', error);
+    }
+  };
+
+  const handleExcludeVideosChange = async (enabled: boolean) => {
+    setExcludeVideos(enabled);
+    await chrome.storage.sync.set({ [STORAGE_KEYS.EXCLUDE_VIDEOS]: enabled });
+
+    // Reload dark mode on current tab to apply changes
+    try {
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      if (tab?.id) {
+        await chrome.tabs.sendMessage(tab.id, {
+          type: 'UPDATE_SETTINGS',
+          payload: { excludeVideos: enabled },
+        });
+      }
+    } catch (error) {
+      console.error('Failed to update exclude videos setting:', error);
+    }
+  };
+
   if (loading) {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
@@ -49,7 +96,7 @@ export function AdvancedSettings({ onClose }: AdvancedSettingsProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm animate-fade-in">
-      <div className="w-[340px] mx-4 rounded-3xl glass border border-white/10 overflow-hidden animate-scale-in">
+      <div className="w-[340px] mx-4 rounded-3xl glass border border-white/10 overflow-hidden animate-scale-in max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between p-5 border-b border-white/10">
           <div className="flex items-center gap-3">
@@ -77,7 +124,76 @@ export function AdvancedSettings({ onClose }: AdvancedSettingsProps) {
         </div>
 
         {/* Content */}
-        <div className="p-5 space-y-5">
+        <div className="p-5 space-y-4">
+          {/* Media Exclusion Section */}
+          <div className="space-y-3">
+            <p className="text-[11px] text-white/50 uppercase tracking-wider font-medium">Media Handling</p>
+
+            {/* Exclude Images Toggle */}
+            <div className="rounded-xl bg-white/5 border border-white/10 p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500/20 to-cyan-500/20 
+                    flex items-center justify-center">
+                    <svg className="w-4 h-4 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm font-semibold text-white">Preserve Images</p>
+                      <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 animate-subtle-pulse shadow-sm">NEW</span>
+                    </div>
+                    <p className="text-[11px] text-white/40">Keep original colors</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => handleExcludeImagesChange(!excludeImages)}
+                  className={`relative w-12 h-6 rounded-full transition-all duration-300 ${excludeImages
+                    ? 'bg-gradient-to-r from-cyan-500 to-blue-500'
+                    : 'bg-white/10'
+                    }`}
+                >
+                  <div className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow-lg transition-all duration-300 ${excludeImages ? 'left-7' : 'left-1'
+                    }`} />
+                </button>
+              </div>
+            </div>
+
+            {/* Exclude Videos Toggle */}
+            <div className="rounded-xl bg-white/5 border border-white/10 p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500/20 to-pink-500/20 
+                    flex items-center justify-center">
+                    <svg className="w-4 h-4 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                        d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm font-semibold text-white">Preserve Videos</p>
+                      <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30 animate-subtle-pulse shadow-sm">NEW</span>
+                    </div>
+                    <p className="text-[11px] text-white/40">Keep original colors</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => handleExcludeVideosChange(!excludeVideos)}
+                  className={`relative w-12 h-6 rounded-full transition-all duration-300 ${excludeVideos
+                    ? 'bg-gradient-to-r from-purple-500 to-pink-500'
+                    : 'bg-white/10'
+                    }`}
+                >
+                  <div className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow-lg transition-all duration-300 ${excludeVideos ? 'left-7' : 'left-1'
+                    }`} />
+                </button>
+              </div>
+            </div>
+          </div>
+
           {/* Floating Button Toggle */}
           <div className="rounded-xl bg-white/5 border border-white/10 p-4">
             <div className="flex items-center justify-between">
@@ -97,17 +213,14 @@ export function AdvancedSettings({ onClose }: AdvancedSettingsProps) {
               <button
                 onClick={() => handleFabChange(!showFab)}
                 className={`relative w-12 h-6 rounded-full transition-all duration-300 ${showFab
-                    ? 'bg-gradient-to-r from-rose-500 to-pink-500'
-                    : 'bg-white/10'
+                  ? 'bg-gradient-to-r from-rose-500 to-pink-500'
+                  : 'bg-white/10'
                   }`}
               >
                 <div className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow-lg transition-all duration-300 ${showFab ? 'left-7' : 'left-1'
                   }`} />
               </button>
             </div>
-            <p className="mt-3 text-[11px] text-white/30">
-              Shows a floating button on every page for quick dark mode toggle
-            </p>
           </div>
 
           {/* Keyboard Shortcuts Info */}
@@ -143,17 +256,25 @@ export function AdvancedSettings({ onClose }: AdvancedSettingsProps) {
                   <kbd className="text-[10px] text-white/60 font-mono">K</kbd>
                 </div>
               </div>
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] text-white/50">Reading mode</span>
+                <div className="flex items-center gap-1.5 px-2 py-1 rounded bg-white/5">
+                  <kbd className="text-[10px] text-white/60 font-mono">⌘</kbd>
+                  <span className="text-[10px] text-white/30">+</span>
+                  <kbd className="text-[10px] text-white/60 font-mono">⇧</kbd>
+                  <span className="text-[10px] text-white/30">+</span>
+                  <kbd className="text-[10px] text-white/60 font-mono">R</kbd>
+                </div>
+              </div>
             </div>
           </div>
 
           {/* Version Info */}
           <div className="text-center pt-2">
-            <p className="text-[10px] text-white/20">Dark Mode Pro v1.1.0</p>
+            <p className="text-[10px] text-white/20">Dark Mode Pro v1.2.0</p>
           </div>
         </div>
       </div>
     </div>
   );
 }
-
-
