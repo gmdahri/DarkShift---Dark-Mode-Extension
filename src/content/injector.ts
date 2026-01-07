@@ -9,6 +9,8 @@ export interface DarkModeSettings {
   sepia: number;      // 0-100, default 0
   grayscale: number;  // 0-100, default 0
   saturation: number; // 0-200, default 100
+  excludeImages: boolean; // Exclude images from dark mode filter
+  excludeVideos: boolean; // Exclude videos from dark mode filter
 }
 
 export const DEFAULT_SETTINGS: DarkModeSettings = {
@@ -18,23 +20,25 @@ export const DEFAULT_SETTINGS: DarkModeSettings = {
   sepia: 0,
   grayscale: 0,
   saturation: 100,
+  excludeImages: true,
+  excludeVideos: true,
 };
 
 export function injectDarkMode(settings: DarkModeSettings = DEFAULT_SETTINGS): boolean {
   try {
     // Remove existing styles if present
     removeDarkMode();
-    
+
     // Create and inject main dark mode style
     const style = document.createElement('style');
     style.id = STYLE_ID;
-    style.textContent = getDarkModeCSS();
-    
+    style.textContent = getDarkModeCSS(settings);
+
     // Create filter style for brightness/contrast
     const filterStyle = document.createElement('style');
     filterStyle.id = FILTER_ID;
     filterStyle.textContent = getFilterCSS(settings);
-    
+
     // Insert at the beginning of head for higher priority
     if (document.head.firstChild) {
       document.head.insertBefore(filterStyle, document.head.firstChild);
@@ -43,7 +47,7 @@ export function injectDarkMode(settings: DarkModeSettings = DEFAULT_SETTINGS): b
       document.head.appendChild(style);
       document.head.appendChild(filterStyle);
     }
-    
+
     console.log('Dark mode injected successfully');
     return true;
   } catch (error) {
@@ -54,13 +58,13 @@ export function injectDarkMode(settings: DarkModeSettings = DEFAULT_SETTINGS): b
 
 export function updateFilters(settings: DarkModeSettings): void {
   let filterStyle = document.getElementById(FILTER_ID) as HTMLStyleElement;
-  
+
   if (!filterStyle) {
     filterStyle = document.createElement('style');
     filterStyle.id = FILTER_ID;
     document.head.appendChild(filterStyle);
   }
-  
+
   filterStyle.textContent = getFilterCSS(settings);
 }
 
@@ -79,16 +83,35 @@ export function isDarkModeActive(): boolean {
 export function showFAB(onClick: () => void): void {
   // Remove existing FAB if present
   hideFAB();
-  
-  // Create FAB container
+
+  // Create FAB container with fixed positioning to ensure visibility
   const fab = document.createElement('div');
   fab.id = FAB_ID;
+
+  // Apply critical styles directly to container - NOT using 'all: initial' as it resets width/height
+  fab.style.cssText = `
+    position: fixed !important;
+    bottom: 24px !important;
+    right: 24px !important;
+    width: 56px !important;
+    height: 56px !important;
+    z-index: 2147483647 !important;
+    pointer-events: auto !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    box-sizing: border-box !important;
+  `;
+
   fab.innerHTML = `
     <button id="dark-mode-fab-button" style="
-      all: initial;
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 56px;
       height: 56px;
       border-radius: 16px;
@@ -100,14 +123,36 @@ export function showFAB(onClick: () => void): void {
       align-items: center;
       justify-content: center;
       box-shadow: 0 4px 20px rgba(249, 115, 22, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2);
-      transition: all 0.3s ease;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
       font-family: system-ui, -apple-system, sans-serif;
+      pointer-events: auto;
+      margin: 0;
+      padding: 0;
     ">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: block;">
         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
       </svg>
     </button>
     <style>
+      #${FAB_ID} {
+        position: fixed !important;
+        bottom: 24px !important;
+        right: 24px !important;
+        width: 56px !important;
+        height: 56px !important;
+        z-index: 2147483647 !important;
+        pointer-events: auto !important;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+      }
+      #dark-mode-fab-button {
+        pointer-events: auto !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        width: 56px !important;
+        height: 56px !important;
+      }
       #dark-mode-fab-button:hover {
         transform: scale(1.1) !important;
         box-shadow: 0 6px 24px rgba(249, 115, 22, 0.5), 0 4px 12px rgba(0, 0, 0, 0.3) !important;
@@ -121,15 +166,18 @@ export function showFAB(onClick: () => void): void {
       }
     </style>
   `;
-  
-  document.body.appendChild(fab);
-  
+
+  // Append to documentElement (html) instead of body to avoid being affected by 
+  // the CSS filter on body, which creates a new containing block for fixed elements.
+  // This ensures the FAB stays fixed to the viewport.
+  document.documentElement.appendChild(fab);
+
   // Add click handler
   const button = document.getElementById('dark-mode-fab-button');
   if (button) {
     button.addEventListener('click', onClick);
   }
-  
+
   // Update FAB icon based on current state
   updateFABIcon();
 }
@@ -144,9 +192,9 @@ export function hideFAB(): void {
 export function updateFABIcon(): void {
   const button = document.getElementById('dark-mode-fab-button');
   if (!button) return;
-  
+
   const isActive = isDarkModeActive();
-  
+
   if (isActive) {
     // Sun icon when dark mode is active (clicking will turn it off)
     button.innerHTML = `
@@ -176,7 +224,7 @@ export function updateFABIcon(): void {
 
 function getFilterCSS(settings: DarkModeSettings): string {
   const filters = [];
-  
+
   if (settings.brightness !== 100 && settings.brightness > 0) {
     filters.push(`brightness(${Math.max(10, Math.min(200, settings.brightness))}%)`);
   }
@@ -192,11 +240,11 @@ function getFilterCSS(settings: DarkModeSettings): string {
   if (settings.saturation !== undefined && settings.saturation !== 100) {
     filters.push(`saturate(${Math.max(0, Math.min(200, settings.saturation))}%)`);
   }
-  
+
   if (filters.length === 0) {
     return '';
   }
-  
+
   // Calculate inverse filters for media (to counteract page-level filters)
   const mediaFilters = [];
   if (settings.brightness !== 100 && settings.brightness > 0) {
@@ -207,7 +255,7 @@ function getFilterCSS(settings: DarkModeSettings): string {
     const inverseContrast = Math.max(10, Math.min(200, Math.round(10000 / settings.contrast)));
     mediaFilters.push(`contrast(${inverseContrast}%)`);
   }
-  
+
   return `
     html {
       filter: ${filters.join(' ')} !important;
@@ -220,7 +268,28 @@ function getFilterCSS(settings: DarkModeSettings): string {
   `;
 }
 
-function getDarkModeCSS(): string {
+function getDarkModeCSS(settings?: DarkModeSettings): string {
+  const excludeImages = settings?.excludeImages ?? true;
+  const excludeVideos = settings?.excludeVideos ?? true;
+
+  // Build media selector based on what should be excluded
+  const mediaSelectors: string[] = [];
+  if (excludeImages) {
+    mediaSelectors.push('img', 'picture', 'svg image', '[style*="background-image"]', '[style*="background: url"]', '[style*="background:url"]');
+  }
+  if (excludeVideos) {
+    mediaSelectors.push('video', '[class*="video"]', '[class*="player"]');
+  }
+  // Always include these for proper rendering
+  mediaSelectors.push('canvas', 'iframe', 'embed', 'object');
+
+  const mediaRevertCSS = mediaSelectors.length > 0 ? `
+    /* Revert media elements so they look normal */
+    ${mediaSelectors.join(',\n    ')} {
+      filter: invert(1) hue-rotate(180deg) !important;
+    }
+  ` : '';
+
   return `
     /* Base dark mode using CSS filter inversion */
     html {
@@ -233,32 +302,12 @@ function getDarkModeCSS(): string {
       background-color: #fff !important;
     }
     
-    /* Revert media elements so they look normal */
-    img,
-    video,
-    picture,
-    canvas,
-    iframe,
-    embed,
-    object,
-    svg image,
-    [style*="background-image"],
-    [style*="background: url"],
-    [style*="background:url"] {
-      filter: invert(1) hue-rotate(180deg) !important;
-    }
+    ${mediaRevertCSS}
     
     /* Fix for nested inverts */
     img img,
     picture img {
       filter: none !important;
-    }
-    
-    /* Preserve specific elements */
-    video,
-    [class*="video"],
-    [class*="player"] {
-      filter: invert(1) hue-rotate(180deg) !important;
     }
     
     /* Fix inputs and form elements */

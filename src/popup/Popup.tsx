@@ -245,6 +245,46 @@ export function Popup() {
               </div>
             </button>
 
+            {/* Reading Mode Button */}
+            <button
+              onClick={async () => {
+                try {
+                  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+                  if (tab?.id) {
+                    await chrome.tabs.sendMessage(tab.id, { type: 'TOGGLE_READING_MODE' });
+                    window.close(); // Close popup after activating reading mode
+                  }
+                } catch (error) {
+                  console.error('Failed to toggle reading mode:', error);
+                }
+              }}
+
+              className="group rounded-2xl glass p-4 card-hover text-left relative overflow-hidden"
+            >
+              <div
+                className="absolute top-2 right-2 px-1.5 py-0.5 rounded-full bg-rose-500/20 border border-rose-500/30 shadow-sm"
+                style={{ animation: 'subtle-pulse 1.5s ease-in-out infinite' }}
+              >
+                <p className="text-[9px] font-bold text-rose-300 leading-none">NEW</p>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-rose-500/20 to-pink-500/20 
+                  flex items-center justify-center border border-rose-500/20
+                  group-hover:border-rose-500/40 transition-colors">
+                  <svg className="w-5 h-5 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                      d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-white group-hover:text-rose-300 transition-colors">
+                    Reading
+                  </p>
+                  <p className="text-[11px] text-white/40 mt-0.5">Focus mode</p>
+                </div>
+              </div>
+            </button>
+
             <button
               onClick={() => setShowSchedule(true)}
               className="group rounded-2xl glass p-4 card-hover text-left"
@@ -269,8 +309,11 @@ export function Popup() {
 
             <button
               onClick={() => setShowAdvanced(true)}
-              className="group rounded-2xl glass p-4 card-hover text-left"
+              className="col-span-2 group rounded-2xl glass p-4 card-hover text-left relative overflow-hidden"
             >
+              <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/30 animate-subtle-pulse shadow-sm">
+                <p className="text-[9px] font-bold text-emerald-300 leading-none">NEW</p>
+              </div>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500/20 to-teal-500/20 
                   flex items-center justify-center border border-emerald-500/20
@@ -283,9 +326,9 @@ export function Popup() {
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-white group-hover:text-emerald-300 transition-colors">
-                    Advanced
+                    Advanced Settings
                   </p>
-                  <p className="text-[11px] text-white/40 mt-0.5">More options</p>
+                  <p className="text-[11px] text-white/40 mt-0.5">Media exclusion, sync & more</p>
                 </div>
               </div>
             </button>
